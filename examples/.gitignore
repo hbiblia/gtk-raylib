@@ -1,6 +1,2 @@
 *.exe
 *.dll
-src/*.o
-src/*.dll
-examples/*.exe
-examples/*.dll

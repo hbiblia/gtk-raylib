@@ -6,29 +6,26 @@
 static int embedWidth;
 static int embedHeight;
 
-// :(
-static GtkWidget *glAreaGlobal;
-
 // -------------------------------------------------------
 // BASE CORE RAYLIB
 // -------------------------------------------------------
+void EmbedSizeCallback(int width, int height);
+void EmbedMouseButtonCallback(int button, int action, int mods);
+void EmbedMouseCursorPosCallback(double x, double y);
+void EmbedKeyCallback(int key, int scancode, int action, int mods);
+void EmbedScrollCallback(double xoffset, double yoffset);
 
 // -------------------------------------------------------
-// GTK GLAREA
+// Cerramos el context
 // -------------------------------------------------------
 static void _unrealize(GtkWidget *widget)
 {
     // CloseWindow();
 }
 
-static void _resize(GtkGLArea *glarea)
-{
-    embedWidth = gtk_widget_get_allocated_width(GTK_WIDGET(glarea));
-    embedHeight = gtk_widget_get_allocated_height(GTK_WIDGET(glarea));
-
-    EmbedSizeCallback(embedWidth, embedHeight);
-}
-
+// -------------------------------------------------------
+// Cuando el context de inicializa se carga raylib
+// -------------------------------------------------------
 static void _realize(GtkGLArea *glarea)
 {
     gtk_gl_area_make_current(glarea);
@@ -50,17 +47,39 @@ static void _realize(GtkGLArea *glarea)
     // Start updating:
     gdk_frame_clock_begin_updating(frame_clock);
 }
+
+// -------------------------------------------------------
+// Evento cambio de tamano.
+// -------------------------------------------------------
+static void _resize(GtkGLArea *glarea)
+{
+    embedWidth = gtk_widget_get_allocated_width(GTK_WIDGET(glarea));
+    embedHeight = gtk_widget_get_allocated_height(GTK_WIDGET(glarea));
+
+    EmbedSizeCallback(embedWidth, embedHeight);
+}
+
+// -------------------------------------------------------
+// Evento KeyDown
+// -------------------------------------------------------
 static gboolean _key_press(GtkWidget *widget, GdkEventKey *event)
 {
     int keyval = keymap_raylib[event->hardware_keycode];
     EmbedKeyCallback(keyval, 0, 1, 0);
-    // printf("KeyDown: %d\n", event->hardware_keycode);
 }
+
+// -------------------------------------------------------
+// Evento KeyUp
+// -------------------------------------------------------
 static gboolean _key_release(GtkWidget *widget, GdkEventKey *event)
 {
     int keyval = keymap_raylib[event->hardware_keycode];
     EmbedKeyCallback(keyval, 0, 0, 0);
 }
+
+// -------------------------------------------------------
+// Evento Mouse Button down
+// -------------------------------------------------------
 static gboolean _button_press(GtkWidget *widget, GdkEventButton *event)
 {
     int button = -1;
@@ -73,6 +92,10 @@ static gboolean _button_press(GtkWidget *widget, GdkEventButton *event)
     EmbedMouseButtonCallback(button, 1, 0);
     return true;
 }
+
+// -------------------------------------------------------
+// Evento Mouse Button up
+// -------------------------------------------------------
 static gboolean _button_release(GtkWidget *widget, GdkEventButton *event)
 {
     int button = -1;
@@ -85,11 +108,19 @@ static gboolean _button_release(GtkWidget *widget, GdkEventButton *event)
     EmbedMouseButtonCallback(button, 0, 0);
     return false;
 }
+
+// -------------------------------------------------------
+// Evento Mouse move
+// -------------------------------------------------------
 static gboolean _motion_notify(GtkWidget *widget, GdkEventMotion *event)
 {
     EmbedMouseCursorPosCallback(event->x, event->y);
     return false;
 }
+
+// -------------------------------------------------------
+// Evento para el mouse ruedita o wheel
+// -------------------------------------------------------
 static gboolean _mouse_wheel(GtkWidget *widget, GdkEventScroll *event)
 {
     gdouble y_scroll;
@@ -108,6 +139,7 @@ static gboolean _mouse_wheel(GtkWidget *widget, GdkEventScroll *event)
             break;
         }
     }
+
     EmbedScrollCallback(0, y_scroll);
 }
 
@@ -140,7 +172,7 @@ GtkWidget *gtk_raylib_embed_new(void)
 
     g_signal_connect(G_OBJECT(gl_area), "realize", G_CALLBACK(_realize), NULL);
     g_signal_connect(G_OBJECT(gl_area), "unrealize", G_CALLBACK(_unrealize), NULL);
-    // g_signal_connect(G_OBJECT(gl_area), "size-allocate", G_CALLBACK(_resize), NULL);
+    g_signal_connect(G_OBJECT(gl_area), "size-allocate", G_CALLBACK(_resize), NULL);
 
     gtk_widget_add_events(gl_area, GDK_BUTTON_PRESS_MASK);
     gtk_widget_add_events(gl_area, GDK_BUTTON_RELEASE_MASK);

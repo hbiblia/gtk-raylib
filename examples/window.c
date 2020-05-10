@@ -6,12 +6,16 @@
 
 bool render()
 {
+    const char *hello = "Congrats! You created your first window!";
+
     int w = GetScreenWidth();
     int h = GetScreenHeight();
+    int w_text = MeasureText(hello, 20); // width text
+    
     BeginDrawing();
     {
         ClearBackground(RAYWHITE);
-        DrawText("Congrats! You created your first window!", 190, (h/2) - 20, 20, LIGHTGRAY); // Example
+        DrawText(hello, (w/2) - (w_text/2), (h/2) - 20, 20, LIGHTGRAY); // Example
     }
     EndDrawing();
     return false;

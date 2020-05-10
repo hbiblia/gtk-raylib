@@ -50,11 +50,6 @@ static const int keymap_raylib[] =
 // -------------------------------------------------------
 // BASE CORE RAYLIB
 // -------------------------------------------------------
-void EmbedSizeCallback(int width, int height);
-void EmbedMouseButtonCallback(int button, int action, int mods);
-void EmbedMouseCursorPosCallback(double x, double y);
-void EmbedKeyCallback(int key, int scancode, int action, int mods);
-void EmbedScrollCallback(double xoffset, double yoffset);
 
 // -------------------------------------------------------
 // GTK GLAREA
