@@ -610,7 +610,6 @@ static void RestoreTerminal(void)
 void InitWindow(int width, int height, const char *title)
 {
     TRACELOG(LOG_INFO, "Initializing raylib %s", RAYLIB_VERSION);
-
     CORE.Window.title = title;
 
     // Initialize required global values different than 0
@@ -3257,7 +3256,6 @@ static bool InitGraphicsDevice(int width, int height)
     CORE.Window.display.height = CORE.Window.screen.height;
     SetupFramebuffer(CORE.Window.screen.width, CORE.Window.screen.height);
 #endif
-
     // Initialize OpenGL context (states and resources)
     // NOTE: CORE.Window.screen.width and CORE.Window.screen.height not used, just stored as globals in rlgl
     rlglInit(CORE.Window.screen.width, CORE.Window.screen.height);
@@ -3905,7 +3903,7 @@ static void SwapBuffers(void)
 #endif
 }
 
-#if defined(PLATFORM_DESKTOP) || defined(PLATFORM_WEB) || defined(PLATFORM_EMBED)
+#if defined(PLATFORM_EMBED)
 void EmbedSizeCallback(int width, int height)
 {
     SetupViewport(width, height); // Reset viewport and projection matrix for new size

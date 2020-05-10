@@ -9,6 +9,18 @@
 #include <raymath.h>
 #include <raylib.h>
 
+#if defined(_WIN32)
+    // Microsoft attibutes to tell compiler that symbols are imported/exported from a .dll
+    #if defined(BUILD_LIBTYPE_SHARED)
+        #define GTK_RLAPI __declspec(dllexport)
+    #elif defined(USE_LIBTYPE_SHARED)
+        #define GTK_RLAPI __declspec(dllimport)
+    #else 
+        #define GTK_RLAPI
+    #endif
+#endif
+
+
 static const int keymap_raylib[] =
     {0, 1, 2, 3, 4, 5, 6, 7, KEY_BACKSPACE, KEY_TAB, 10, 11, 12, KEY_ENTER, 14, 15,
      KEY_LEFT_SHIFT, KEY_LEFT_CONTROL, KEY_LEFT_ALT, KEY_PAUSE, KEY_CAPS_LOCK, 21, 22,
@@ -38,12 +50,17 @@ static const int keymap_raylib[] =
 // -------------------------------------------------------
 // BASE CORE RAYLIB
 // -------------------------------------------------------
+void EmbedSizeCallback(int width, int height);
+void EmbedMouseButtonCallback(int button, int action, int mods);
+void EmbedMouseCursorPosCallback(double x, double y);
+void EmbedKeyCallback(int key, int scancode, int action, int mods);
+void EmbedScrollCallback(double xoffset, double yoffset);
 
 // -------------------------------------------------------
 // GTK GLAREA
 // -------------------------------------------------------
 
-GtkWidget *gtk_raylib_embed_new(void);
-void gtk_raylib_init(GtkWidget *window);
+GTK_RLAPI GtkWidget *gtk_raylib_embed_new(void);
+GTK_RLAPI void gtk_raylib_init(GtkWidget *window);
 
 #endif

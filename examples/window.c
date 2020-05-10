@@ -1,0 +1,39 @@
+
+#include <stdio.h>
+#include <gtk/gtk.h>
+
+#include <gtkraylib.h>
+
+bool render()
+{
+    int w = GetScreenWidth();
+    int h = GetScreenHeight();
+    BeginDrawing();
+    {
+        ClearBackground(RAYWHITE);
+        DrawText("Congrats! You created your first window!", 190, (h/2) - 20, 20, LIGHTGRAY); // Example
+    }
+    EndDrawing();
+    return false;
+}
+
+int main(int argc, char *argv[])
+{
+    gtk_init(&argc, &argv);
+
+    GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size(GTK_WINDOW(win), 800, 600);
+    gtk_window_set_title(GTK_WINDOW(win),"Example - window");
+    g_signal_connect(win, "destroy", gtk_main_quit, NULL);
+
+    gtk_raylib_init(win);
+
+    GtkWidget *embed = gtk_raylib_embed_new();
+    gtk_container_add(GTK_CONTAINER(win), embed);
+    g_signal_connect_swapped(embed, "render", G_CALLBACK(render), NULL);
+
+    gtk_widget_show_all(win);
+    gtk_main();
+
+    return 0;
+}
