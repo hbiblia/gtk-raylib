@@ -9,7 +9,7 @@ gcc -w -c raylib/textures.c $CFLAGS -lm -DBUILD_LIBTYPE_SHARED
 gcc -w -c raylib/text.c $CFLAGS -lm -DBUILD_LIBTYPE_SHARED
 gcc -w -c raylib/utils.c $CFLAGS -lm -DBUILD_LIBTYPE_SHARED
 gcc -w -c raylib/models.c $CFLAGS -lm -DBUILD_LIBTYPE_SHARED
-# gcc -W -c raylib/raudio.c $LIBS $CFLAGS -lm -D -DPLATFORM_EMBED
+gcc -w -c raylib/raudio.c $LIBS $CFLAGS -lm -DBUILD_LIBTYPE_SHARED -DPLATFORM_EMBED
 
 #GTK
 gcc -w -c gtkraylib.c $LIBS $CFLAGS -lm -DBUILD_LIBTYPE_SHARED
