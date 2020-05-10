@@ -10,7 +10,7 @@ OBJ = $(SRC:.c=.o)
 BIN := $(BIN).exe
 LIBS = -Wall -L../src -lgtkraylib `pkg-config --libs gtk+-3.0` -lm
 
-all: $(BIN)
+all: clean $(BIN)
 
 clean:
 	rm -f $(BIN) $(OBJS)

@@ -6,8 +6,8 @@
 
 #include <epoxy/gl.h>
 // #include <epoxy/glx.h>
-#include <raymath.h>
-#include <raylib.h>
+#include "raymath.h"
+#include "raylib.h"
 
 #if defined(_WIN32)
     // Microsoft attibutes to tell compiler that symbols are imported/exported from a .dll
