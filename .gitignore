@@ -1,0 +1,4 @@
+*.exe
+*.dll
+src/*.o
+src/*.dll
