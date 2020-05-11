@@ -8,10 +8,17 @@ Es una pequeña biblioteca para crear una incrustación de raylib en gtk+3.x.
 
 # Compilar gtk-raylib
 
+**Windows && dependencias Msys2(msys2-x86_64)**
+- pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-libepoxy
 - cd src
 - sh build-lib.sh
 
-# Compilar ejemplos
+**Linux**
+- El script no funciona aun, si tienes Linux y puedes hacerlo gracias!!
 
+**Mac**
+- El script no funciona aun, si tienes Mac y puedes hacerlo gracias!!
+
+# Compilar ejemplos
 - cd examples
 - make
