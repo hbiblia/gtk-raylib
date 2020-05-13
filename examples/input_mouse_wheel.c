@@ -42,8 +42,6 @@ int main(int argc, char *argv[])
     gtk_window_set_title(GTK_WINDOW(win), "Example - Input mouse wheel");
     g_signal_connect(win, "destroy", gtk_main_quit, NULL);
 
-    gtk_raylib_init(win);
-
     GtkWidget *embed = gtk_raylib_embed_new();
     gtk_container_add(GTK_CONTAINER(win), embed);
     g_signal_connect_swapped(embed, "render", G_CALLBACK(render), NULL);
