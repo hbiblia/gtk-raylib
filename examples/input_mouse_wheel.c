@@ -1,8 +1,6 @@
 
 #include <stdio.h>
-#include <gtk/gtk.h>
-
-#include <gtkraylib.h>
+#include <gtk-raylib.h>
 
 int scrollSpeed, boxPositionY;
 

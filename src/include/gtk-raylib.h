@@ -9,17 +9,16 @@
 #include "raymath.h"
 #include "raylib.h"
 
+#define GTK_RLAPI
+
 #if defined(_WIN32)
     // Microsoft attibutes to tell compiler that symbols are imported/exported from a .dll
     #if defined(BUILD_LIBTYPE_SHARED)
         #define GTK_RLAPI __declspec(dllexport)
     #elif defined(USE_LIBTYPE_SHARED)
         #define GTK_RLAPI __declspec(dllimport)
-    #else 
-        #define GTK_RLAPI
     #endif
 #endif
-
 
 static const int keymap_raylib[] =
     {0, 1, 2, 3, 4, 5, 6, 7, KEY_BACKSPACE, KEY_TAB, 10, 11, 12, KEY_ENTER, 14, 15,
@@ -54,8 +53,15 @@ static const int keymap_raylib[] =
 // -------------------------------------------------------
 // GTK GLAREA
 // -------------------------------------------------------
+#if defined(__cplusplus)
+extern "C" {            // Prevents name mangling of functions
+#endif
 
 GTK_RLAPI GtkWidget *gtk_raylib_embed_new(void);
 GTK_RLAPI void gtk_raylib_init(GtkWidget *window);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

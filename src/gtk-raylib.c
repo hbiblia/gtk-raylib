@@ -1,6 +1,6 @@
 // #define RLGL_IMPLEMENTATION
 // #define RLGL_STANDALONE
-#include <gtkraylib.h>
+#include <gtk-raylib.h>
 
 // render viewport
 static int embedWidth;

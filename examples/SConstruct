@@ -1,0 +1,19 @@
+import os
+env = Environment(ENV = {'PATH' : os.environ['PATH']})
+
+env.Append(CPPPATH = ['../src/include','../src/raylib'])
+env.Append(CPPDEFINES = ['-DBUILD_LIBTYPE_SHARED'])
+env.Append(LIBS=['m','gtk-raylib'])
+env.Append(LIBPATH='..')
+
+env.ParseConfig("pkg-config --cflags --libs gtk+-3.0")
+env.Program('window', 'window.c')
+
+env.Program('input_key', 'input_key.c')
+env.Program('input_mouse', 'input_mouse.c')
+env.Program('input_mouse_wheel', 'input_mouse_wheel.c')
+
+# si tienes problema con el error tipo  ->
+#error while loading shared libraries: gtk-raylib.so
+# 
+# export LD_LIBRARY_PATH=URL_PATH_LIBS:$LD_LIBRARY_PATH
