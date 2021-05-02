@@ -5,7 +5,9 @@ Es una pequeña biblioteca para crear una incrustación de raylib en gtk+3.x.
 - LibEpoxy : https://github.com/anholt/libepoxy
 - Raylib 3.x : https://github.com/raysan5/raylib
 
-# Depedencias
+**Ahora estoy utilizando Scons para el compilado, pronto estare actualizando a Raylib 3.7.**
+
+# Dependencias
 
 python -m pip install scons
 
