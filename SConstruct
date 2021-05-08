@@ -22,4 +22,5 @@ env.Append(CPPDEFINES = [
 env.Append(LIBS=['m','epoxy'])
 
 env.ParseConfig('pkg-config --cflags --libs gtk+-3.0 epoxy')
-env.SharedLibrary('gtk-raylib', custom_src)
+
+env.Library('gtk-raylib', custom_src)

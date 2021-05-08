@@ -1343,10 +1343,18 @@ void rlTextureParameters(unsigned int id, int param, int value)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+// FIX SPEED
+static GLint default_framebuffer_id = 0;
+
 // Enable rendering to texture (fbo)
 void rlEnableRenderTexture(unsigned int id)
 {
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
+    #if defined(PLATFORM_EMBED)
+    // GTK no utiliza el 0 como valor por defecto,
+    // guardamos el valor por defecto.
+    glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &default_framebuffer_id);
+    #endif
     glBindFramebuffer(GL_FRAMEBUFFER, id);
 
     //glDisable(GL_CULL_FACE);    // Allow double side drawing for texture flipping
@@ -1358,7 +1366,7 @@ void rlEnableRenderTexture(unsigned int id)
 void rlDisableRenderTexture(void)
 {
 #if defined(GRAPHICS_API_OPENGL_33) || defined(GRAPHICS_API_OPENGL_ES2)
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, default_framebuffer_id);
 
     //glEnable(GL_CULL_FACE);
     //glCullFace(GL_BACK);
