@@ -3,9 +3,7 @@ Es una pequeña biblioteca para crear una incrustación de raylib en gtk+3.x.
 
 - Gtk+-3.x (OpenGL 3.3)
 - LibEpoxy : https://github.com/anholt/libepoxy
-- Raylib 3.x : https://github.com/raysan5/raylib
-
-**Ahora estoy utilizando Scons para el compilado, pronto estare actualizando a Raylib 3.7.**
+- Raylib 3.7 : https://github.com/raysan5/raylib
 
 # Dependencias
 
