@@ -177,6 +177,8 @@ gboolean _InfocusGlArea(GtkWidget *widget,
         return true;
     }
     EmbedCursorEnterCallback(1);
+
+    return false;
 }
 gboolean _OutfocusGlArea(GtkWidget *widget,
                          GdkEvent *event,
