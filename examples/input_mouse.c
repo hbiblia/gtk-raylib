@@ -7,6 +7,7 @@ Color ballColor = DARKBLUE;
 
 void start()
 {
+    SetTargetFPS(60);
 }
 
 bool render()
@@ -32,6 +33,7 @@ bool render()
         ClearBackground(RAYWHITE);
         DrawCircleV(ballPosition, 40, ballColor);
         DrawText(hello, (w / 2) - (w_text / 2), 20, 20, LIGHTGRAY);
+        DrawFPS(10,10);
     }
     EndDrawing();
     return false;

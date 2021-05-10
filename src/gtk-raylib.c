@@ -13,13 +13,20 @@ void EmbedMouseButtonCallback(int button, int action, int mods);
 void EmbedMouseCursorPosCallback(double x, double y);
 void EmbedKeyCallback(int key, int scancode, int action, int mods);
 void EmbedScrollCallback(double xoffset, double yoffset);
+void EmbedCursorEnterCallback(int enter);
+static void EmbedWindowDropCallback(int count, const char **paths);
 
 // -------------------------------------------------------
 // Cerramos el context
 // -------------------------------------------------------
 static void _unrealize(GtkWidget *widget)
 {
-    // CloseWindow();
+    gtk_gl_area_make_current(GTK_GL_AREA(widget));
+
+    if (gtk_gl_area_get_error(GTK_GL_AREA(widget)) != NULL)
+        return;
+
+    CloseWindow();
 }
 
 // -------------------------------------------------------
@@ -28,12 +35,15 @@ static void _unrealize(GtkWidget *widget)
 static void _realize(GtkGLArea *glarea)
 {
     gtk_gl_area_make_current(glarea);
+    if (gtk_gl_area_get_error(GTK_GL_AREA(glarea)) != NULL)
+        return;
+
     gtk_gl_area_set_has_depth_buffer(glarea, TRUE);
 
     embedWidth = gtk_widget_get_allocated_width(GTK_WIDGET(glarea));
     embedHeight = gtk_widget_get_allocated_height(GTK_WIDGET(glarea));
 
-    InitWindow(embedWidth, embedHeight, "Embed-GTK");
+    InitWindow(embedWidth, embedHeight, NULL);
 
     // Get frame clock:
     GdkGLContext *glcontext = gtk_gl_area_get_context(GTK_GL_AREA(glarea));
@@ -63,6 +73,7 @@ static void _resize(GtkGLArea *glarea)
 static gboolean _key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     int keyval = keymap_raylib[event->hardware_keycode];
+    // printf("KeyInfo: %s -> %d -> %d\n",gdk_keyval_name(event->keyval),event->hardware_keycode, keyval);
     EmbedKeyCallback(keyval, 0, 1, 0);
     return true;
 }
@@ -82,7 +93,8 @@ static gboolean _key_release(GtkWidget *widget, GdkEventKey *event, gpointer use
 // -------------------------------------------------------
 static gboolean _button_press(GtkWidget *widget, GdkEventButton *event)
 {
-    if (!gtk_widget_has_grab(widget)) {
+    if (!gtk_widget_has_grab(widget))
+    {
         gtk_widget_set_can_focus(GTK_GL_AREA(widget), true);
         gtk_widget_grab_focus(widget);
     }
@@ -119,7 +131,6 @@ static gboolean _button_release(GtkWidget *widget, GdkEventButton *event)
 // -------------------------------------------------------
 static gboolean _motion_notify(GtkWidget *widget, GdkEventMotion *event)
 {
-    if (!gtk_widget_is_focus(widget)){return true; }
     EmbedMouseCursorPosCallback(event->x, event->y);
     return false;
 }
@@ -152,9 +163,9 @@ static gboolean _mouse_wheel(GtkWidget *widget, GdkEventScroll *event)
 // -------------------------------------------------------
 // Iniciamos el evento key, para esto buscamos el parent-window
 // -------------------------------------------------------
-gboolean _focusGlArea(GtkWidget *widget,
-                      GdkEvent *event,
-                      gboolean data)
+gboolean _InfocusGlArea(GtkWidget *widget,
+                        GdkEvent *event,
+                        gboolean data)
 {
     // Detenemos los inputs, cuando no tenemos focus.
     if (data == false)
@@ -163,7 +174,33 @@ gboolean _focusGlArea(GtkWidget *widget,
         {
             EmbedKeyCallback(keymap_raylib[i], 0, 0, 0);
         }
+        return true;
     }
+    EmbedCursorEnterCallback(1);
+}
+gboolean _OutfocusGlArea(GtkWidget *widget,
+                         GdkEvent *event,
+                         gboolean data)
+{
+    EmbedCursorEnterCallback(0);
+}
+
+void _droppable(GtkWidget *widget,
+                GdkDragContext *context,
+                gint x,
+                gint y,
+                GtkSelectionData *data,
+                guint info,
+                guint time)
+{
+    guchar *text_result = gtk_selection_data_get_data(data);
+    gchar **result = g_strsplit(text_result, "\n", -1);
+    int length = g_strv_length(result) - 1;
+
+    EmbedWindowDropCallback(length, result);
+
+    g_strfreev(result);
+    // g_free(text_result);
 }
 
 GtkWidget *_get_window(GtkWidget *widget)
@@ -189,9 +226,9 @@ static void _parentSet(GtkWidget *widget,
     GtkWidget *win_parent = _get_window(widget);
     {
         gtk_widget_add_events(win_parent, GDK_FOCUS_CHANGE_MASK);
-        // g_signal_connect(G_OBJECT(win_parent), "focus-in-event", G_CALLBACK(_focusGlArea), true);
-        g_signal_connect(G_OBJECT(win_parent), "focus-out-event", G_CALLBACK(_focusGlArea), false);
-        g_signal_connect(G_OBJECT(win_parent), "set-focus", G_CALLBACK(_focusGlArea), false);
+        g_signal_connect(G_OBJECT(win_parent), "focus-in-event", G_CALLBACK(_InfocusGlArea), true);
+        g_signal_connect(G_OBJECT(win_parent), "focus-out-event", G_CALLBACK(_OutfocusGlArea), false);
+        // g_signal_connect(G_OBJECT(win_parent), "set-focus", G_CALLBACK(_InfocusGlArea), false);
     }
 }
 
@@ -207,7 +244,7 @@ GtkWidget *gtk_raylib_embed_new(void)
     // gtk_gl_area_set_has_stencil_buffer(gl_area, true);
     // gtk_gl_area_set_use_es(gl_area, true);
     // gtk_gl_area_set_has_alpha(gl_area, true);
-    gtk_gl_area_set_required_version(GTK_GL_AREA(gl_area), 3, 3);
+    gtk_gl_area_set_required_version(GTK_GL_AREA(gl_area), 3, 2);
     // gtk_widget_set_can_focus(GTK_GL_AREA(gl_area), true);
     gtk_widget_set_focus_on_click(GTK_GL_AREA(gl_area), true);
 
@@ -232,7 +269,23 @@ GtkWidget *gtk_raylib_embed_new(void)
     g_signal_connect(G_OBJECT(gl_area), "scroll-event", G_CALLBACK(_mouse_wheel), NULL);
 
     g_signal_connect(G_OBJECT(gl_area), "show", G_CALLBACK(_parentSet), NULL);
-    // g_signal_connect(G_OBJECT(gl_area), "grab-focus", G_CALLBACK(_focusGlArea), true);
+    // g_signal_connect(G_OBJECT(gl_area), "grab-focus", G_CALLBACK(_InfocusGlArea), true);
+
+    enum
+    {
+        TARGET_STRING,
+        TARGET_URL
+    };
+    static GtkTargetEntry targetentries[] =
+        {
+            {"STRING", 0, TARGET_STRING},
+            {"text/plain", 0, TARGET_STRING},
+            {"text/uri-list", 0, TARGET_URL},
+        };
+
+    gtk_drag_dest_set(gl_area, GTK_DEST_DEFAULT_ALL, targetentries, 3,
+                      GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK);
+    g_signal_connect(G_OBJECT(gl_area), "drag-data-received", G_CALLBACK(_droppable), NULL);
 
     return gl_area;
 }

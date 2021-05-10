@@ -16,9 +16,6 @@ bool render()
 {
     const char *hello = "move the ball with arrow keys";
 
-    int w = GetScreenWidth();
-    int w_text = MeasureText(hello, 20); // width text
-
     if (IsKeyDown(KEY_RIGHT)) ballPosition.x += 2.0f;
     if (IsKeyDown(KEY_LEFT)) ballPosition.x -= 2.0f;
     if (IsKeyDown(KEY_UP)) ballPosition.y -= 2.0f;
@@ -27,7 +24,7 @@ bool render()
     BeginDrawing();
     {
         ClearBackground(RAYWHITE);
-        DrawText(hello, (w / 2) - (w_text / 2), 20, 20, LIGHTGRAY);
+        DrawText(hello, 10, 10, 20, DARKGRAY);
         DrawCircleV(ballPosition, 50, MAROON);
     }
     EndDrawing();

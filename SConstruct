@@ -20,6 +20,7 @@ env.Append(CPPDEFINES = [
     '-DEPOXY'
     ])
 env.Append(LIBS=['m','epoxy'])
+env.Append(CCFLAGS=['-w','-std=c99'])
 
 env.ParseConfig('pkg-config --cflags --libs gtk+-3.0 epoxy')
 

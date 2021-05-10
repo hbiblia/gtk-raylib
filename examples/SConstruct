@@ -1,17 +1,24 @@
 import os
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 
+gtkraylib_dep = File('../libgtk-raylib.a')
+
 env.Append(CPPPATH = ['../src/include','../src/raylib'])
 env.Append(CPPDEFINES = ['-DBUILD_LIBTYPE_SHARED'])
-env.Append(LIBS=['m','gtk-raylib'])
+env.Append(LIBS=[gtkraylib_dep, 'm','gtk-raylib'])
 env.Append(LIBPATH='..')
 
-env.ParseConfig("pkg-config --cflags --libs gtk+-3.0")
+env.ParseConfig("pkg-config --cflags --libs gtk+-3.0 epoxy")
 env.Program('window', 'window.c')
 
 env.Program('input_key', 'input_key.c')
 env.Program('input_mouse', 'input_mouse.c')
 env.Program('input_mouse_wheel', 'input_mouse_wheel.c')
+env.Program('core_2d_camera_platformer', 'core_2d_camera_platformer.c')
+env.Program('core_3d_camera_free', 'core_3d_camera_free.c')
+env.Program('core_3d_picking', 'core_3d_picking.c')
+env.Program('core_drop_files', 'core_drop_files.c')
+env.Program('core_window_letterbox', 'core_window_letterbox.c')
 
 # si tienes problema con el error tipo  ->
 #error while loading shared libraries: gtk-raylib.so

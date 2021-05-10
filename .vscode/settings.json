@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "gtk-raylib.h": "c"
+        "algorithm": "c",
+        "string_view": "c",
+        "functional": "c"
     }
 }

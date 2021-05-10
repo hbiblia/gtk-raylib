@@ -16,7 +16,12 @@ bool render()
         DrawText(hello, (w/2) - (w_text/2), (h/2) - 20, 20, LIGHTGRAY); // Example
     }
     EndDrawing();
-    return false;
+    return true;
+}
+
+void start()
+{
+    SetTargetFPS(60);
 }
 
 int main(int argc, char *argv[])
@@ -31,6 +36,7 @@ int main(int argc, char *argv[])
     GtkWidget *embed = gtk_raylib_embed_new();
     gtk_container_add(GTK_CONTAINER(win), embed);
     g_signal_connect_swapped(embed, "render", G_CALLBACK(render), NULL);
+    g_signal_connect_swapped(embed, "realize", G_CALLBACK(start), NULL);
 
     gtk_widget_show_all(win);
     gtk_main();
